@@ -1,0 +1,31 @@
+/* Navbar.css */
+.nav-item-link {
+  text-transform: uppercase;
+}
+
+.nav-item-link:hover {
+  opacity: 0.85;
+}
+
+/* Remove all underline effects */
+.nav-item:after,
+.nav-item-link:after {
+  display: none;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    height: auto;
+    padding: 10px;
+  }
+  
+  .nav-links {
+    margin: 10px 0 0 0;
+  }
+  
+  .nav-item {
+    margin: 0 10px;
+  }
+}
