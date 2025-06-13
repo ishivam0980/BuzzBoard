@@ -1,5 +1,8 @@
 import React from 'react'
 import './Home.css'
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import NewsItem from './NewsItem';
 
 export default function Home() {
 
@@ -22,6 +25,21 @@ export default function Home() {
     zIndex: 0
   };
   
+
+  const [items, setItems] = useState([]);  const fetchItems = async () => {
+      try {
+        const res = await axios.get(`https://newsdata.io/api/1/latest?country=in&apikey=${process.env.REACT_APP_NEWS_API_KEY}`);
+        setItems(res.data.results);  
+                
+      } catch (err) {
+        console.error("Error message:", err.message);
+        console.error("Error response:", err.response);
+        console.error("Error status:", err.response ? err.response.status : 'No response');
+      }
+  };
+  useEffect(() => {
+    fetchItems();
+  }, []);
   return (
     <div className="home-container">
       <div className="hero-section">
@@ -32,11 +50,12 @@ export default function Home() {
         <h1>Welcome to BuzzBoard</h1>
         <p>Your one-stop destination for the latest news in Entertainment, Sports, and Technology.</p>
         <div className="timestamp">{formatDate()}</div>
-      </div>
-        <div className="top-stories">
+      </div>        <div className="top-stories">
         <h2>Top Stories</h2>
         <div className="news-grid">
-          {/* News items will be inserted here */}
+          {items.map((item, index) => (
+            <NewsItem key={index} item={item} />
+          ))}
         </div>
       </div>
     </div>

@@ -1,13 +1,36 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import './Category.css';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import NewsItem from './NewsItem'; 
 
-export default function Category(props) {
-  const icons = {
+export default function Category(props) {  const icons = {
     entertainment: '🎬',
     sports: '🏅',
-    technology: '💻'
+    technology: '💻',
+    politics: '🏛️',
+    world: '🌎',
+    other: '📌'
   };
+
+  const [items, setItems] = useState([]);
+    useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const res = await axios.get(`https://newsdata.io/api/1/latest?country=in&apikey=${process.env.REACT_APP_NEWS_API_KEY}&category=${props.category}`);
+        setItems(res.data.results);               
+      } catch (err) {
+        // console.error('error : ', err);
+        console.error("Error message:", err.message);
+        console.error("Error response:", err.response);
+        console.error("Error status:", err.response ? err.response.status : 'No response');
+      }
+    };
+    
+    fetchItems();
+  }, [props.category]);
+
     return (
     <div className={`category-container category-${props.category}`}>
       <div className="category-header">
@@ -19,9 +42,10 @@ export default function Category(props) {
         </div>
       </div>
         <div className="category-content">
-        <p>Latest {props.category} news and updates will appear here. Stay tuned for breaking stories, expert analysis, and in-depth coverage.</p>
-        <div className="category-news-grid">
-          {/* News items will be inserted here */}
+          <div className="category-news-grid">
+          {items.map((item, index) => (
+            <NewsItem key={index} item={item} />
+          ))}
         </div>
       </div>
     </div>

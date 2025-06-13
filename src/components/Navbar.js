@@ -53,8 +53,7 @@ export default function Navbar() {
       <ul style={styles.navLinks} className="nav-links">
         <li style={styles.navItem} className="nav-item">
           <Link to="/" style={styles.navItemLink} className="nav-item-link">HOME</Link>
-        </li>
-        <li style={styles.navItem} className="nav-item">
+        </li>        <li style={styles.navItem} className="nav-item">
           <Link to="/entertainment" style={styles.navItemLink} className="nav-item-link">ENTERTAINMENT</Link>
         </li>
         <li style={styles.navItem} className="nav-item">
@@ -62,6 +61,15 @@ export default function Navbar() {
         </li>
         <li style={styles.navItem} className="nav-item">
           <Link to="/technology" style={styles.navItemLink} className="nav-item-link">TECHNOLOGY</Link>
+        </li>
+        <li style={styles.navItem} className="nav-item">
+          <Link to="/politics" style={styles.navItemLink} className="nav-item-link">POLITICS</Link>
+        </li>
+        <li style={styles.navItem} className="nav-item">
+          <Link to="/world" style={styles.navItemLink} className="nav-item-link">WORLD</Link>
+        </li>
+        <li style={styles.navItem} className="nav-item">
+          <Link to="/other" style={styles.navItemLink} className="nav-item-link">OTHER</Link>
         </li>
       </ul>
     </nav>
