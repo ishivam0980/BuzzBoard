@@ -25,21 +25,71 @@ export default function Home() {
     zIndex: 0
   };
   
-
-  const [items, setItems] = useState([]);  const fetchItems = async () => {
-      try {
-        const res = await axios.get(`https://newsdata.io/api/1/latest?country=in&apikey=${process.env.REACT_APP_NEWS_API_KEY}`);
-        setItems(res.data.results);  
-                
-      } catch (err) {
-        console.error("Error message:", err.message);
-        console.error("Error response:", err.response);
-        console.error("Error status:", err.response ? err.response.status : 'No response');
-      }
+  // State variables for pagination and news items
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [nextPageToken, setNextPageToken] = useState(null);
+  const [pageTokens, setPageTokens] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  const fetchItems = async (pageToken = null) => {
+    setLoading(true);
+    try {
+     
+      const url = `https://newsdata.io/api/1/latest?country=in&apikey=${process.env.REACT_APP_NEWS_API_KEY}${pageToken ? `&page=${pageToken}` : ''}`;
+      
+      const res = await axios.get(url);
+      setItems(res.data.results);
+      setNextPageToken(res.data.nextPage);
+      setLoading(false);
+    } catch (err) {
+      console.error("Error message:", err.message);
+      console.error("Error response:", err.response);
+      console.error("Error status:", err.response ? err.response.status : 'No response');
+      setLoading(false);
+    }
   };
+  
+  // Initial data fetch on component mount
   useEffect(() => {
     fetchItems();
   }, []);
+  
+  const handlePrevClick = () => {
+    if (pageTokens.length > 0) {
+      // Get the previous page token
+      const prevToken = pageTokens[pageTokens.length - 1];
+      
+      // Remove the last token from the history stack
+      setPageTokens(pageTokens.slice(0, -1));
+      
+      // Fetch with the previous token
+      fetchItems(prevToken);
+      
+      // Update page counter
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextClick = () => {
+    if (nextPageToken) {
+      // Store current token in the history before navigating
+      if (currentPage === 1) {
+        // First page has no token, so we push null
+        setPageTokens([...pageTokens, null]);
+      } else {
+        const currentToken = nextPageToken;
+        setPageTokens([...pageTokens, currentToken]);
+      }
+      
+      // Fetch with the next page token
+      fetchItems(nextPageToken);
+      
+      // Update page counter
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  
   return (
     <div className="home-container">
       <div className="hero-section">
@@ -50,12 +100,40 @@ export default function Home() {
         <h1>Welcome to BuzzBoard</h1>
         <p>Your one-stop destination for the latest news in Entertainment, Sports, and Technology.</p>
         <div className="timestamp">{formatDate()}</div>
-      </div>        <div className="top-stories">
+      </div>        
+      <div className="top-stories">
         <h2>Top Stories</h2>
-        <div className="news-grid">
-          {items.map((item, index) => (
-            <NewsItem key={index} item={item} />
-          ))}
+        {loading ? (
+          <div className="loading-container">
+            <p>Loading news...</p>
+          </div>
+        ) : (
+          <div className="news-grid">
+            {items && items.length > 0 ? (
+              items.map((item, index) => (
+                <NewsItem key={index} item={item} />
+              ))
+            ) : (
+              <p>No news available at the moment.</p>
+            )}
+          </div>
+        )}
+        <div className="pagination-controls">
+          <button 
+            className="pagination-btn prev-btn" 
+            onClick={handlePrevClick}
+            disabled={pageTokens.length === 0 || loading}
+          >
+            &larr; Previous
+          </button>
+          <span className="page-indicator">Page {currentPage}</span>
+          <button 
+            className="pagination-btn next-btn" 
+            onClick={handleNextClick}
+            disabled={!nextPageToken || loading}
+          >
+            Next &rarr;
+          </button>
         </div>
       </div>
     </div>

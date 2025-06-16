@@ -132,6 +132,55 @@
   box-shadow: 0 5px 15px rgba(0,0,0,0.15);
 }
 
+/* Pagination Controls */
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  padding: 15px 0;
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.pagination-btn {
+  background-color: #1a1a1a;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.pagination-btn:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+
+.pagination-btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.pagination-btn.prev-btn {
+  padding-left: 15px;
+}
+
+.pagination-btn.next-btn {
+  padding-right: 15px;
+}
+
+.pagination-btn:disabled {
+  background-color: #555;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Responsive styles */
 @media (max-width: 768px) {
   .hero-section {
