@@ -3,6 +3,7 @@ import './Home.css'
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import NewsItem from './NewsItem';
+import loadingAnimation from '../loadingAnimation.gif';
 
 export default function Home() {
 
@@ -31,6 +32,7 @@ export default function Home() {
   const [nextPageToken, setNextPageToken] = useState(null);
   const [pageTokens, setPageTokens] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [hasMorePages, setHasMorePages] = useState(true); // New state to track if more pages are available
   
   const fetchItems = async (pageToken = null) => {
     setLoading(true);
@@ -39,7 +41,17 @@ export default function Home() {
       const url = `https://newsdata.io/api/1/latest?country=in&apikey=${process.env.REACT_APP_NEWS_API_KEY}${pageToken ? `&page=${pageToken}` : ''}`;
       
       const res = await axios.get(url);
-      setItems(res.data.results);
+      
+      // Check if we actually received any new articles
+      if (res.data.results && res.data.results.length > 0) {
+        setItems(res.data.results);
+        setHasMorePages(true); // We got results, so assuming more might be available
+      } else {
+        // No results returned but we might keep the previous items visible
+        setHasMorePages(false); // No more pages available
+      }
+      
+      // Always update the next page token from the API response
       setNextPageToken(res.data.nextPage);
       setLoading(false);
     } catch (err) {
@@ -47,6 +59,7 @@ export default function Home() {
       console.error("Error response:", err.response);
       console.error("Error status:", err.response ? err.response.status : 'No response');
       setLoading(false);
+      setHasMorePages(false); // Assume no more pages on error
     }
   };
   
@@ -68,11 +81,14 @@ export default function Home() {
       
       // Update page counter
       setCurrentPage(currentPage - 1);
+      
+      // Reset more pages flag when going back
+      setHasMorePages(true);
     }
   };
 
   const handleNextClick = () => {
-    if (nextPageToken) {
+    if (nextPageToken && hasMorePages) {
       // Store current token in the history before navigating
       if (currentPage === 1) {
         // First page has no token, so we push null
@@ -105,7 +121,7 @@ export default function Home() {
         <h2>Top Stories</h2>
         {loading ? (
           <div className="loading-container">
-            <p>Loading news...</p>
+            <p><img src={loadingAnimation} alt="Loading Animation"/></p>
           </div>
         ) : (
           <div className="news-grid">
@@ -130,7 +146,7 @@ export default function Home() {
           <button 
             className="pagination-btn next-btn" 
             onClick={handleNextClick}
-            disabled={!nextPageToken || loading}
+            disabled={!nextPageToken || !hasMorePages || loading}
           >
             Next &rarr;
           </button>

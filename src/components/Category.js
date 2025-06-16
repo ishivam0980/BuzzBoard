@@ -4,6 +4,7 @@ import './Category.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import NewsItem from './NewsItem'; 
+import loadingAnimation from '../loadingAnimation.gif';
 
 export default function Category(props) {  
   const icons = {
@@ -20,6 +21,7 @@ export default function Category(props) {
   const [nextPageToken, setNextPageToken] = useState(null);
   const [pageTokens, setPageTokens] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [hasMorePages, setHasMorePages] = useState(true); // New state to track if more pages exist
   
   const fetchItems = async (pageToken = null) => {
     setLoading(true);
@@ -28,22 +30,33 @@ export default function Category(props) {
       
       const res = await axios.get(url);
       
-      setItems(res.data.results);
+      // Check if we received actual results
+      if (res.data.results && res.data.results.length > 0) {
+        setItems(res.data.results);
+        setHasMorePages(true); // We got results, so assuming more might be available
+      } else {
+        // No results returned, might keep the previous items visible
+        setHasMorePages(false); // No more pages available
+      }
+      
+      // Always update the next page token
       setNextPageToken(res.data.nextPage);
       setLoading(false);
     } catch (err) {
-      // console.error("Error fetching items:", err);
       console.error("Error message:", err.message);
       console.error("Error response:", err.response);
       console.error("Error status:", err.response ? err.response.status : 'No response');
       setLoading(false);
+      setHasMorePages(false); // Assume no more pages on error
     }
   };
   
   useEffect(() => {
-    setNextPageToken(null);//important to reset nextPageToken when category changes else it will keep showing the previous category's nextPageToken
-    setPageTokens([]);//same for pageTokens
-    setCurrentPage(1);//
+    // Reset everything when category changes
+    setNextPageToken(null);
+    setPageTokens([]);
+    setCurrentPage(1);
+    setHasMorePages(true); // Reset this flag too
     fetchItems();
   }, [props.category]);
 
@@ -56,11 +69,14 @@ export default function Category(props) {
       fetchItems(prevToken);
       
       setCurrentPage(currentPage - 1);
+      
+      // Reset more pages flag when going back
+      setHasMorePages(true);
     }
   };
 
   const handleNextClick = () => {
-    if (nextPageToken) {
+    if (nextPageToken && hasMorePages) {
       if (currentPage === 1) {
         setPageTokens([...pageTokens, null]);
       } else {
@@ -87,7 +103,7 @@ export default function Category(props) {
       <div className="category-content">
         {loading ? (
           <div className="loading-container">
-            <p>Loading news...</p>
+            <p><img src={loadingAnimation} alt="loading animation" /></p>
           </div>
         ) : (
           <div className="category-news-grid">
@@ -112,7 +128,7 @@ export default function Category(props) {
           <button 
             className="pagination-btn next-btn" 
             onClick={handleNextClick}
-            disabled={!nextPageToken || loading}
+            disabled={!nextPageToken || !hasMorePages || loading}
           >
             Next &rarr;
           </button>
