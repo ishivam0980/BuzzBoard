@@ -1,77 +1,58 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../App.css';
 import './Navbar.css';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
-export default function Navbar() {  
-  const styles = {    
-    navbar: {
-      display: 'flex',
-      alignItems: 'center',
-      padding: '0 20px',
-      backgroundColor: '#1a1a1a',
-      color: 'white',
-      height: '60px',
-      boxShadow: '0 3px 10px rgba(0,0,0,0.3)',
-      width: '100%',
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      zIndex: 1000,
-    },
-    logo: {
-      fontWeight: 'bold',
-      fontSize: '1.5rem',
-      cursor: 'pointer',
-      letterSpacing: '1px',
-    },    
-    navLinks: {
-      display: 'flex',
-      listStyle: 'none',
-      margin: '0 0 0 20px',
-      padding: 0,
-    },    
-    navItem: {
-      margin: '0 16px',
-      cursor: 'pointer',
-      position: 'relative',
-    },    
-    navItemLink: {
-      color: 'white',
-      textDecoration: 'none',
-      fontSize: '0.95rem',
-      fontWeight: '500',
-      letterSpacing: '0.8px',
-      padding: '8px 0',
-    }
-  };  
+export default function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+  
+
+  const getNavLinkClass = ({ isActive }) => {
+    return isActive ? "nav-item-link active-link" : "nav-item-link";
+  };
+  
   return (
-    <nav style={styles.navbar} className="navbar">
-      <div style={styles.logo} className="logo">
-        <Link to="/" style={{color:"white",textDecoration:"none"}}><span>BuzzBoard</span></Link>
+    <nav className="navbar">
+      <div className="navbar-container">
+        <div className="logo">
+         
+          <NavLink to="/" className="logo-link" onClick={() => setIsMenuOpen(false)}><span>BuzzBoard</span></NavLink>
+        </div>
+        
+        <div className="hamburger" onClick={toggleMenu}>
+          <span className={isMenuOpen ? 'bar active' : 'bar'}></span>
+          <span className={isMenuOpen ? 'bar active' : 'bar'}></span>
+          <span className={isMenuOpen ? 'bar active' : 'bar'}></span>
+        </div>
+        
+        <ul className={isMenuOpen ? 'nav-links active' : 'nav-links'}>
+          <li className="nav-item" onClick={() => setIsMenuOpen(false)}>
+            <NavLink to="/" className={getNavLinkClass} end>HOME</NavLink>
+          </li>
+          <li className="nav-item" onClick={() => setIsMenuOpen(false)}>
+            <NavLink to="/entertainment" className={getNavLinkClass}>ENTERTAINMENT</NavLink>
+          </li>
+          <li className="nav-item" onClick={() => setIsMenuOpen(false)}>
+            <NavLink to="/sports" className={getNavLinkClass}>SPORTS</NavLink>
+          </li>
+          <li className="nav-item" onClick={() => setIsMenuOpen(false)}>
+            <NavLink to="/technology" className={getNavLinkClass}>TECHNOLOGY</NavLink>
+          </li>
+          <li className="nav-item" onClick={() => setIsMenuOpen(false)}>
+            <NavLink to="/politics" className={getNavLinkClass}>POLITICS</NavLink>
+          </li>
+          <li className="nav-item" onClick={() => setIsMenuOpen(false)}>
+            <NavLink to="/world" className={getNavLinkClass}>WORLD</NavLink>
+          </li>
+          <li className="nav-item" onClick={() => setIsMenuOpen(false)}>
+            <NavLink to="/other" className={getNavLinkClass}>OTHER</NavLink>
+          </li>
+        </ul>
       </div>
-      <ul style={styles.navLinks} className="nav-links">
-        <li style={styles.navItem} className="nav-item">
-          <Link to="/" style={styles.navItemLink} className="nav-item-link">HOME</Link>
-        </li>        <li style={styles.navItem} className="nav-item">
-          <Link to="/entertainment" style={styles.navItemLink} className="nav-item-link">ENTERTAINMENT</Link>
-        </li>
-        <li style={styles.navItem} className="nav-item">
-          <Link to="/sports" style={styles.navItemLink} className="nav-item-link">SPORTS</Link>
-        </li>
-        <li style={styles.navItem} className="nav-item">
-          <Link to="/technology" style={styles.navItemLink} className="nav-item-link">TECHNOLOGY</Link>
-        </li>
-        <li style={styles.navItem} className="nav-item">
-          <Link to="/politics" style={styles.navItemLink} className="nav-item-link">POLITICS</Link>
-        </li>
-        <li style={styles.navItem} className="nav-item">
-          <Link to="/world" style={styles.navItemLink} className="nav-item-link">WORLD</Link>
-        </li>
-        <li style={styles.navItem} className="nav-item">
-          <Link to="/other" style={styles.navItemLink} className="nav-item-link">OTHER</Link>
-        </li>
-      </ul>
     </nav>
   );
 }
