@@ -42,9 +42,6 @@ A modern React-based news aggregator application that provides the latest news f
   <img src="public/images/ss (6).png"  width="800px">
 </div>
 
-<div align="center">
-  <img src="public/images/ss (7).png" alt="Mobile Responsive View" width="400px">
-</div>
 
 ## 🛠️ Technologies Used
 
