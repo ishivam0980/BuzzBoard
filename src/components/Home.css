@@ -32,7 +32,7 @@
 
 .hero-section h1 {
   position: relative;
-  font-size: 2.5rem;
+  font-size: 2rem !important; /* Reduced from 2.5rem */
   margin-bottom: 15px;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -93,7 +93,7 @@
 
 .top-stories h2 {
   position: relative;
-  font-size: 1.6rem;
+  font-size: 1.3rem !important; /* Reduced from 1.6rem */
   color: #222;
   margin-bottom: 20px;
   font-weight: 700;
@@ -114,9 +114,9 @@
 /* News content styling - placeholder for your future API integration */
 .news-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 20px;
-  margin-top: 25px;
+  margin-top: 20px;
 }
 
 .news-card {
@@ -181,6 +181,24 @@
   cursor: not-allowed;
 }
 
+/* Loading container compact styling */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px; /* Reduced height */
+  width: 100%;
+}
+
+.loading-container p {
+  font-size: 1rem; /* Reduced size */
+  color: #555;
+  margin: 0;
+  padding: 15px; /* Reduced padding */
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 8px;
+}
+
 /* Responsive styles */
 @media (max-width: 768px) {
   .hero-section {
@@ -202,6 +220,11 @@
   .top-stories h2 {
     font-size: 1.4rem;
   }
+  
+  .news-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -215,5 +238,11 @@
   
   .news-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .news-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }

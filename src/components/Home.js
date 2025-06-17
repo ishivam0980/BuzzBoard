@@ -121,7 +121,7 @@ export default function Home() {
         <h2>Top Stories</h2>
         {loading ? (
           <div className="loading-container">
-            <p><img src={loadingAnimation} alt="Loading Animation"/></p>
+            <img src={loadingAnimation} alt="Loading Animation"/>
           </div>
         ) : (
           <div className="news-grid">

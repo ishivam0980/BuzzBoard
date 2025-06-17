@@ -103,7 +103,7 @@ export default function Category(props) {
       <div className="category-content">
         {loading ? (
           <div className="loading-container">
-            <p><img src={loadingAnimation} alt="loading animation" /></p>
+            <img src={loadingAnimation} alt="loading animation" />
           </div>
         ) : (
           <div className="category-news-grid">
