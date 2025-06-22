@@ -7,7 +7,7 @@ import NewsItem from './NewsItem';
 import loadingAnimation from '../loadingAnimation.gif';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-export default function Category(props) {  
+export default function Category({loadingBarRef,...props}) {  
   const icons = {
     entertainment: '🎬',
     sports: '🏅',
@@ -24,7 +24,10 @@ export default function Category(props) {
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(true); // New state to track if more pages exist
     const fetchItems = async (pageToken = null, appendData = false) => {
-    if (!appendData) setLoading(true);
+    if (!appendData) {
+      setLoading(true);
+      loadingBarRef.current?.continuousStart();  
+    }
     try {
       const url = `https://newsdata.io/api/1/latest?country=in&apikey=${process.env.REACT_APP_NEWS_API_KEY}&category=${props.category}${pageToken ? `&page=${pageToken}` : ''}`;
       
@@ -44,11 +47,13 @@ export default function Category(props) {
       
       // Always update the next page token
       setNextPageToken(res.data.nextPage);
+      loadingBarRef.current?.complete();
       setLoading(false);
     } catch (err) {
       console.error("Error message:", err.message);
       console.error("Error response:", err.response);
       console.error("Error status:", err.response ? err.response.status : 'No response');
+      loadingBarRef.current?.complete();
       setLoading(false);
       setHasMorePages(false);
     }
@@ -153,9 +158,11 @@ export default function Category(props) {
 
         {/* Current implementation using infinite scroll */}
         {loading && items.length === 0 ? (
-          <div className="loading-container">
-            <img src={loadingAnimation} alt="loading animation" />
-          </div>
+          /* Uncomment below if you want to show loading image instead of top loading bar */
+              /* <div className="loading-container">
+                <img src={loadingAnimation} alt="Loading Animation"/>
+              </div> */
+          <div></div>
         ) : (
           <InfiniteScroll
             dataLength={items.length}

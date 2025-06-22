@@ -6,7 +6,7 @@ import NewsItem from './NewsItem';
 import loadingAnimation from '../loadingAnimation.gif';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-export default function Home() {
+export default function Home({loadingBarRef}) {
 
   const formatDate = () => {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -35,7 +35,10 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(true); // New state to track if more pages are available
     const fetchItems = async (pageToken = null, appendData = false) => {
-    if (!appendData) setLoading(true);
+    if (!appendData) {
+      loadingBarRef.current?.continuousStart();
+      setLoading(true);
+    }
     try {
      
       const url = `https://newsdata.io/api/1/latest?country=in&apikey=${process.env.REACT_APP_NEWS_API_KEY}${pageToken ? `&page=${pageToken}` : ''}`;
@@ -56,6 +59,7 @@ export default function Home() {
       
       // Always update the next page token from the API response
       setNextPageToken(res.data.nextPage);
+      loadingBarRef.current?.complete();
       setLoading(false);
     } catch (err) {
       console.error("Error message:", err.message);
@@ -63,6 +67,7 @@ export default function Home() {
       console.error("Error status:", err.response ? err.response.status : 'No response');
       setLoading(false);
       setHasMorePages(false);
+      loadingBarRef.current?.complete();
     }
   };
   
@@ -162,21 +167,26 @@ export default function Home() {
           >
             Next &rarr;
           </button>
-        </div> */}
-
-        {/* Current implementation using infinite scroll */}
-        {loading && items.length === 0 ? (
+        </div> */}        {/* Current implementation using infinite scroll */}
+        {/* Uncomment below if you want to show loading image instead of top loading bar */}
+        {/* {loading && items.length === 0 ? (
           <div className="loading-container">
             <img src={loadingAnimation} alt="Loading Animation"/>
           </div>
+        ) : ( */}
+        {loading && items.length === 0 ? (
+          <div></div>
         ) : (
           <InfiniteScroll
             dataLength={items.length}
-            next={fetchMoreData}
-            hasMore={hasMorePages}
-            loader={<div className="loading-container">
+            next={fetchMoreData}            hasMore={hasMorePages}
+            loader={
+              /* Uncomment below if you want to show loading image instead of top loading bar */
+              /* <div className="loading-container">
                 <img src={loadingAnimation} alt="Loading Animation"/>
-              </div>}
+              </div> */
+              <div></div>
+            }
             endMessage={<p style={{ textAlign: 'center' }}><b>No more news to load</b></p>}
           >
             <div className="news-grid">

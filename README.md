@@ -15,34 +15,66 @@ A modern React-based news aggregator application that provides the latest news f
 - **Responsive Design**: Fully responsive layout that works on desktop and mobile devices
 - **Infinite Scroll**: Seamless browsing experience with automatic content loading as you scroll
 - **Pagination Support**: Alternative navigation with Previous/Next buttons (configurable)
+- **Top Loading Bar**: Visual feedback during API requests with customizable loading indicator
 - **Dynamic Page Titles**: Browser tab titles update based on the current category
 - **Clean User Interface**: Modern and minimalist UI for easy news consumption
 
 ## 📸 Screenshots
 
 <div align="center">
-  <p><strong>Homepage View</strong></p>
-  <img src="public/images/ss (1).png" alt="Homepage View" width="800px">
+  <img src="public/images/SS (1).png" alt="Screenshot 1" width="800px">
 </div>
 
 <div align="center">
-  <img src="public/images/ss (2).png" alt="ss" width="800px">
+  <img src="public/images/SS (2).png" alt="Screenshot 2" width="800px">
 </div>
 
 <div align="center">
-  <img src="public/images/ss (3).png" alt="ss" width="800px">
+  <img src="public/images/SS (3).png" alt="Screenshot 3" width="800px">
 </div>
 
 <div align="center">
-  <img src="public/images/ss (4).png" alt="ss" width="800px">
+  <img src="public/images/SS (4).png" alt="Screenshot 4" width="800px">
 </div>
 
 <div align="center">
-  <img src="public/images/ss (5).png" alt="ss" width="800px">
+  <img src="public/images/SS (5).png" alt="Screenshot 5" width="800px">
 </div>
 
 <div align="center">
-  <img src="public/images/ss (6).png"  width="800px">
+  <img src="public/images/SS (6).png" alt="Screenshot 6" width="800px">
+</div>
+
+<div align="center">
+  <img src="public/images/SS (7).png" alt="Screenshot 7" width="800px">
+</div>
+
+<div align="center">
+  <img src="public/images/SS (8).png" alt="Screenshot 8" width="800px">
+</div>
+
+<div align="center">
+  <img src="public/images/SS (9).png" alt="Screenshot 9" width="800px">
+</div>
+
+<div align="center">
+  <img src="public/images/SS (10).png" alt="Screenshot 10" width="800px">
+</div>
+
+<div align="center">
+  <img src="public/images/SS (11).png" alt="Screenshot 11" width="800px">
+</div>
+
+<div align="center">
+  <img src="public/images/SS (12).png" alt="Screenshot 12" width="800px">
+</div>
+
+<div align="center">
+  <img src="public/images/SS (13).png" alt="Screenshot 13" width="800px">
+</div>
+
+<div align="center">
+  <img src="public/images/SS (14).png" alt="Screenshot 14" width="800px">
 </div>
 
 
@@ -121,6 +153,11 @@ If you prefer traditional pagination with Previous/Next buttons:
 3. Uncomment the `handlePrevClick` and `handleNextClick` functions
 
 Both navigation methods are fully implemented and can be switched easily by commenting/uncommenting the relevant code sections.
+
+### Loading Indicators
+The app uses a top loading bar for API requests. If you prefer the traditional loading animation:
+- Uncomment the loading image sections in `Home.js` and `Category.js`
+- Comment out the top loading bar calls in the API functions
 
 ## 🔮 Future Enhancements
 
