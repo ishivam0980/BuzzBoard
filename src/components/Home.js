@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import NewsItem from './NewsItem';
 import loadingAnimation from '../loadingAnimation.gif';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 export default function Home() {
 
@@ -26,16 +27,15 @@ export default function Home() {
     zIndex: 0
   };
   
-  // State variables for pagination and news items
+  // State variables 
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [nextPageToken, setNextPageToken] = useState(null);
   const [pageTokens, setPageTokens] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(true); // New state to track if more pages are available
-  
-  const fetchItems = async (pageToken = null) => {
-    setLoading(true);
+    const fetchItems = async (pageToken = null, appendData = false) => {
+    if (!appendData) setLoading(true);
     try {
      
       const url = `https://newsdata.io/api/1/latest?country=in&apikey=${process.env.REACT_APP_NEWS_API_KEY}${pageToken ? `&page=${pageToken}` : ''}`;
@@ -44,11 +44,14 @@ export default function Home() {
       
       // Check if we actually received any new articles
       if (res.data.results && res.data.results.length > 0) {
-        setItems(res.data.results);
-        setHasMorePages(true); // We got results, so assuming more might be available
+        if (appendData) {
+          setItems(prevItems => [...prevItems, ...res.data.results]);
+        } else {
+          setItems(res.data.results);
+        }
+        setHasMorePages(!!res.data.nextPage);
       } else {
-        // No results returned but we might keep the previous items visible
-        setHasMorePages(false); // No more pages available
+        setHasMorePages(false);
       }
       
       // Always update the next page token from the API response
@@ -59,52 +62,61 @@ export default function Home() {
       console.error("Error response:", err.response);
       console.error("Error status:", err.response ? err.response.status : 'No response');
       setLoading(false);
-      setHasMorePages(false); // Assume no more pages on error
+      setHasMorePages(false);
     }
   };
   
   // Initial data fetch on component mount
   useEffect(() => {
     fetchItems();
-  }, []);
-  
-  const handlePrevClick = () => {
-    if (pageTokens.length > 0) {
-      // Get the previous page token
-      const prevToken = pageTokens[pageTokens.length - 1];
-      
-      // Remove the last token from the history stack
-      setPageTokens(pageTokens.slice(0, -1));
-      
-      // Fetch with the previous token
-      fetchItems(prevToken);
-      
-      // Update page counter
-      setCurrentPage(currentPage - 1);
-      
-      // Reset more pages flag when going back
-      setHasMorePages(true);
-    }
-  };
-
-  const handleNextClick = () => {
+  }, []);  // Load more data for infinite scroll
+  const fetchMoreData = () => {
     if (nextPageToken && hasMorePages) {
-      // Store current token in the history before navigating
-      if (currentPage === 1) {
-        // First page has no token, so we push null
-        setPageTokens([...pageTokens, null]);
-      } else {
-        const currentToken = nextPageToken;
-        setPageTokens([...pageTokens, currentToken]);
-      }
-      
-      // Fetch with the next page token
-      fetchItems(nextPageToken);
-      
-      // Update page counter
-      setCurrentPage(currentPage + 1);
+      fetchItems(nextPageToken, true);
     }
   };
+  // Uncomment below functions when you want to use next and prev buttons instead of infinite scroll
+  // To Switch to Pagination:
+  // 1. Comment out the "Current implementation using infinite scroll" section
+  // 2. Uncomment the pagination code section
+  // 3. Uncomment the handlePrevClick and handleNextClick functions
+  // const handlePrevClick = () => {
+  //   if (pageTokens.length > 0) {
+  //     // Get the previous page token
+  //     const prevToken = pageTokens[pageTokens.length - 1];
+      
+  //     // Remove the last token from the history stack
+  //     setPageTokens(pageTokens.slice(0, -1));
+      
+  //     // Fetch with the previous token
+  //     fetchItems(prevToken);
+      
+  //     // Update page counter
+  //     setCurrentPage(currentPage - 1);
+      
+  //     // Reset more pages flag when going back
+  //     setHasMorePages(true);
+  //   }
+  // };
+
+  // const handleNextClick = () => {
+  //   if (nextPageToken && hasMorePages) {
+  //     // Store current token in the history before navigating
+  //     if (currentPage === 1) {
+  //       // First page has no token, so we push null
+  //       setPageTokens([...pageTokens, null]);
+  //     } else {
+  //       const currentToken = nextPageToken;
+  //       setPageTokens([...pageTokens, currentToken]);
+  //     }
+      
+  //     // Fetch with the next page token
+  //     fetchItems(nextPageToken);
+      
+  //     // Update page counter
+  //     setCurrentPage(currentPage + 1);
+  //   }
+  // };
   
   return (
     <div className="home-container">
@@ -118,8 +130,8 @@ export default function Home() {
         <div className="timestamp">{formatDate()}</div>
       </div>        
       <div className="top-stories">
-        <h2>Top Stories</h2>
-        {loading ? (
+        <h2>Top Stories</h2>        {/* Uncomment below code when you want to use prev and next buttons instead of infinite scroll */}
+        {/* {loading ? (
           <div className="loading-container">
             <img src={loadingAnimation} alt="Loading Animation"/>
           </div>
@@ -150,7 +162,36 @@ export default function Home() {
           >
             Next &rarr;
           </button>
-        </div>
+        </div> */}
+
+        {/* Current implementation using infinite scroll */}
+        {loading && items.length === 0 ? (
+          <div className="loading-container">
+            <img src={loadingAnimation} alt="Loading Animation"/>
+          </div>
+        ) : (
+          <InfiniteScroll
+            dataLength={items.length}
+            next={fetchMoreData}
+            hasMore={hasMorePages}
+            loader={<div className="loading-container">
+                <img src={loadingAnimation} alt="Loading Animation"/>
+              </div>}
+            endMessage={<p style={{ textAlign: 'center' }}><b>No more news to load</b></p>}
+          >
+            <div className="news-grid">
+              {items && items.length > 0 ? (
+                items.map((item, index) => (
+                  <NewsItem key={index} item={item} />
+                ))
+              ) : (
+                <p>No news available at the moment.</p>
+              )}
+            </div>
+          </InfiniteScroll>
+        )}
+
+
       </div>
     </div>
   )

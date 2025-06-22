@@ -13,6 +13,9 @@ A modern React-based news aggregator application that provides the latest news f
   - World 🌎
   - Other 📌
 - **Responsive Design**: Fully responsive layout that works on desktop and mobile devices
+- **Infinite Scroll**: Seamless browsing experience with automatic content loading as you scroll
+- **Pagination Support**: Alternative navigation with Previous/Next buttons (configurable)
+- **Dynamic Page Titles**: Browser tab titles update based on the current category
 - **Clean User Interface**: Modern and minimalist UI for easy news consumption
 
 ## 📸 Screenshots
@@ -103,6 +106,21 @@ src/
   ├── index.js              # Entry point
   └── ...
 ```
+
+## ⚙️ Navigation Features
+
+### Infinite Scroll (Default)
+The application uses infinite scroll by default for a smooth browsing experience. New content loads automatically as you scroll down.
+
+### Alternative: Pagination
+If you prefer traditional pagination with Previous/Next buttons:
+
+**To switch from Infinite Scroll to Pagination:**
+1. In `Home.js` and `Category.js`, comment out the "Current implementation using infinite scroll" section
+2. Uncomment the pagination code section  
+3. Uncomment the `handlePrevClick` and `handleNextClick` functions
+
+Both navigation methods are fully implemented and can be switched easily by commenting/uncommenting the relevant code sections.
 
 ## 🔮 Future Enhancements
 
