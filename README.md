@@ -16,6 +16,7 @@ A modern React-based news aggregator application that provides the latest news f
 - **Infinite Scroll**: Seamless browsing experience with automatic content loading as you scroll
 - **Pagination Support**: Alternative navigation with Previous/Next buttons (configurable)
 - **Top Loading Bar**: Visual feedback during API requests with customizable loading indicator
+- **Sticky Navigation**: Fixed navbar that stays visible while scrolling for easy access
 - **Dynamic Page Titles**: Browser tab titles update based on the current category
 - **Clean User Interface**: Modern and minimalist UI for easy news consumption
 
